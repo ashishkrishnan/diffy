@@ -16,11 +16,20 @@ class MainActivity : AppCompatActivity() {
     val personB = Person(2L, "Afnan", 22, "FEMALE", "+91-9940473947", updated = 3.days.ago.beginningOfDay)
     val personC = Person(3L, "Gurpreet", 22, "MALE", "+91-9940473948", updated = 4.days.ago.beginningOfDay)
 
-    val cachedPersonsList = listOf(personA, personB, personC)
+    val cachedPersonsList = listOf(personA, personB.copy(age = 25, updated = 2.days.ago.beginningOfDay), personC)
 
-    val remotePersonsList = listOf(personA, personB.copy(phoneNumber = "+91-111000111", updated = 2.days.ago.beginningOfDay), personC.copy(updated = 2.days.ago.beginningOfDay))
+    val remotePersonsList = listOf(personA.copy(updated = 1.days.ago.beginningOfDay), personC.copy(age = 21, name = "Gurpreet", updated = 3.days.ago.beginningOfDay), personA.copy(id = 4L))
 
     val personDiffUtilCallback = PersonDiffUtilCallback(cachedPersonsList, remotePersonsList)
     val result = DiffUtil.calculateDiff(personDiffUtilCallback)
+
+    val personUpdateCallback = PersonUpdateCallback(cachedPersonsList, remotePersonsList)
+    result.dispatchUpdatesTo(personUpdateCallback)
+
+    personUpdateCallback.personListWithDataChanges.forEach { println(it) }
+    println("Removed")
+    personUpdateCallback.personListThatHasBeenDeletedFromRemote.forEach { println(it) }
+    println("Inserted")
+    personUpdateCallback.newlyPersonList.forEach { println(it) }
   }
 }

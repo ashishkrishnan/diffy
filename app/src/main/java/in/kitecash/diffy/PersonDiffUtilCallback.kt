@@ -25,4 +25,11 @@ class PersonDiffUtilCallback(
     val remoteUpdated = remotePersons[newItemPosition].updated
     return cachedUpdated == remoteUpdated
   }
+
+  override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Pair<Person, Person> {
+    val previouslyUpdatedPerson = cachedPersons[oldItemPosition]
+    val newlyUpdatedPerson = remotePersons[newItemPosition]
+
+    return Pair(previouslyUpdatedPerson, newlyUpdatedPerson)
+  }
 }
