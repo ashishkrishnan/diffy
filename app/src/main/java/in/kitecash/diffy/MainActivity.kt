@@ -18,16 +18,14 @@ class MainActivity : AppCompatActivity() {
     val personD = Person(4L, "Dinesh", 22, "MALE", "+91-9940473948", updated = 4.days.ago.beginningOfDay)
     val personE = Person(5L, "Adam", 22, "MALE", "+91-9940473948", updated = 4.days.ago.beginningOfDay)
 
-    val cachedPersonsList = listOf(
-        personB,
-        personA,
-        personC
-    )
+    val cachedPersonsList = emptyList<Person>()
 
     val remotePersonsList = listOf(
-        personA.copy(name = "Bhawna", updated = 1.days.ago.beginningOfDay),
+        personB,
+        personE,
         personD,
-        personE
+        personA.copy(name = "Bhawna", updated = 1.days.ago.beginningOfDay),
+        personC
     )
 
     val personDiffUtilCallback = PersonDiffUtilCallback(cachedPersonsList, remotePersonsList)
