@@ -6,29 +6,33 @@ class PersonUpdateCallback(
     private val cachedPersonList: List<Person>,
     private val remotePersonList: List<Person>
 ): ListUpdateCallback {
-  val personListWithDataChanges by lazy { mutableListOf<Person>() }
-  val personListThatHasBeenDeletedFromRemote by lazy { mutableListOf<Person>() }
-
-  val newlyPersonList by lazy { mutableListOf<Person>() }
+  val newlyInsertedPersons by lazy { mutableListOf<Person>() }
+  val deletedPersons       by lazy { mutableListOf<Person>() }
+  val updatedOldList by lazy { mutableListOf<Person>() }
+  val updatedNewList by lazy { mutableListOf<Person>() }
 
   override fun onChanged(position: Int, count: Int, payload: Any?) {
-    println("onChanged: $position $count")
+    println("onChanged: Position: $position Count: $count")
+
     if (payload is Pair<*, *>) {
-      personListWithDataChanges.add(payload.second as Person)
+      updatedOldList.add(payload.first as Person)
+      updatedNewList.add(payload.second as Person)
+    } else  {
+      println(payload)
+      throw UnsupportedOperationException("Cannot be handled")
     }
   }
 
   override fun onInserted(position: Int, count: Int) {
-    println("onInserted: $position $count")
-
-    if (cachedPersonList.isEmpty()) {
-      // The onInserted method is called for every single insertion. Using the element position (method params) can result into redundant data.
-      newlyPersonList.addAll(remotePersonList.subList(position, position+count))
-    }
+    println("onInserted: Position: $position Count: $count")
+    println(remotePersonList[position])
+    newlyInsertedPersons.addAll(remotePersonList.subList(position, position +  count - 1))
   }
 
   override fun onRemoved(position: Int, count: Int) {
-    personListThatHasBeenDeletedFromRemote.add(cachedPersonList.subList(position, position + count)[0])
+    println("onRemoved: Position: $position Count: $count")
+
+    deletedPersons.addAll(cachedPersonList.subList(position, position +  count))
   }
 
   override fun onMoved(fromPosition: Int, toPosition: Int) {
