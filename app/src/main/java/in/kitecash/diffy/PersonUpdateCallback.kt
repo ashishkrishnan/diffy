@@ -28,12 +28,11 @@ class PersonUpdateCallback(
   override fun onInserted(position: Int, count: Int) {
     println("onInserted: Position: $position Count: $count")
 
-    if (cachedPersonList.isEmpty()) {
+    if (cachedPersonList.isEmpty() || duplicateCachedPersonsList.isEmpty()) {
       val insertedList = remotePersonList.subList(position, position + count)
       newlyInsertedPersons.addAll(insertedList)
       duplicateCachedPersonsList.addAll(insertedList)
     } else {
-      println("$duplicateCachedPersonsList")
       val pivotId = duplicateCachedPersonsList[0].id
       val pivotIndex = remotePersonList.indexOfFirst { it.id == pivotId }
       val startIndex = if (position > 0) pivotIndex + position else pivotIndex - count
@@ -42,19 +41,23 @@ class PersonUpdateCallback(
       newlyInsertedPersons.addAll(insertedList)
       duplicateCachedPersonsList.addAll(position, insertedList)
     }
-
-//    val remotePosition = remotePersonList.count() - count // FIXME: Wrong code
-//    val insertedList = remotePersonList.subList(remotePosition, remotePosition + count)
-//    newlyInsertedPersons.addAll(insertedList)
-//    duplicateCachedPersonsList.addAll(position, insertedList)
   }
 
   override fun onRemoved(position: Int, count: Int) {
     println("onRemoved: Position: $position Count: $count")
 
     deletedPersons.addAll(duplicateCachedPersonsList.subList(position, position + count))
-    for (pos in IntRange(position, position + count - 1)) {
-      duplicateCachedPersonsList.removeAt(pos)
+    var lastIndex = position + count - 1
+    var pos = position
+
+    if (count == 1) {
+      duplicateCachedPersonsList.removeAt(position)
+    } else {
+      while (lastIndex >= position && pos <= position + count) {
+        duplicateCachedPersonsList.removeAt(position)
+        lastIndex -= 1
+        pos++
+      }
     }
   }
 

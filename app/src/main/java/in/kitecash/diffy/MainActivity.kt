@@ -18,12 +18,10 @@ class MainActivity : AppCompatActivity() {
     val personD = Person(4L, "Dinesh", 22, "MALE", "+91-9940473948", updated = 4.days.ago.beginningOfDay)
     val personE = Person(5L, "Adam", 22, "MALE", "+91-9940473948", updated = 4.days.ago.beginningOfDay)
 
-    val cachedPersonsList = emptyList<Person>()
+    val cachedPersonsList = listOf(personD, personE)
 
     val remotePersonsList = listOf(
         personB,
-        personE,
-        personD,
         personA.copy(name = "Bhawna", updated = 1.days.ago.beginningOfDay),
         personC
     )
