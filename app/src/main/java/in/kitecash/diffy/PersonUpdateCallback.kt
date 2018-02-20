@@ -48,15 +48,15 @@ class PersonUpdateCallback(
 
     deletedPersons.addAll(duplicateCachedPersonsList.subList(position, position + count))
     var lastIndex = position + count - 1
-    var pos = position
+    var startIndex = position
 
     if (count == 1) {
       duplicateCachedPersonsList.removeAt(position)
     } else {
-      while (lastIndex >= position && pos <= position + count) {
+      while (lastIndex >= position && startIndex <= position + count) {
         duplicateCachedPersonsList.removeAt(position)
-        lastIndex -= 1
-        pos++
+        lastIndex--
+        startIndex++
       }
     }
   }
