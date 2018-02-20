@@ -12,11 +12,11 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    val personA = Person(1L, "Ashish", 22, "MALE", "+91-9940473946", updated = 2.days.ago.beginningOfDay)
-    val personB = Person(2L, "Afnan", 22, "FEMALE", "+91-9940473947", updated = 3.days.ago.beginningOfDay)
-    val personC = Person(3L, "Gurpreet", 22, "MALE", "+91-9940473948", updated = 4.days.ago.beginningOfDay)
-    val personD = Person(4L, "Dinesh", 22, "MALE", "+91-9940473948", updated = 4.days.ago.beginningOfDay)
-    val personE = Person(5L, "Adam", 22, "MALE", "+91-9940473948", updated = 4.days.ago.beginningOfDay)
+    val personA = Person(1L, "Ashish", 22, "MALE", "+006", updated = 2.days.ago.beginningOfDay)
+    val personB = Person(2L, "Afnan", 22, "FEMALE", "+007", updated = 3.days.ago.beginningOfDay)
+    val personC = Person(3L, "Gurpreet", 22, "MALE", "+008", updated = 4.days.ago.beginningOfDay)
+    val personD = Person(4L, "Dinesh", 22, "MALE", "+008", updated = 4.days.ago.beginningOfDay)
+    val personE = Person(5L, "Adam", 22, "MALE", "+008", updated = 4.days.ago.beginningOfDay)
 
     val cachedPersonsList = listOf(personD, personB, personE, personC, personA)
 
@@ -27,9 +27,11 @@ class MainActivity : AppCompatActivity() {
         personC
     )
 
+    // Calculate Diff
     val personDiffUtilCallback = PersonDiffUtilCallback(cachedPersonsList, remotePersonsList)
     val result = DiffUtil.calculateDiff(personDiffUtilCallback)
 
+    // Find Changes in the list by above calculated diff.
     val personUpdateCallback = PersonUpdateCallback(cachedPersonsList, remotePersonsList)
     result.dispatchUpdatesTo(personUpdateCallback)
 
@@ -40,9 +42,9 @@ class MainActivity : AppCompatActivity() {
     personUpdateCallback.deletedPersons.forEach { println(it) }
 
     println("Updated Old List")
-    personUpdateCallback.updatedOldList.forEach { println(it) }
+    personUpdateCallback.updatedCacheList.forEach { println(it) }
 
     println("Updated New List")
-    personUpdateCallback.updatedNewList.forEach { println(it) }
+    personUpdateCallback.updatedRemoteList.forEach { println(it) }
   }
 }
