@@ -6,7 +6,7 @@ class PersonUpdateCallback(
     private val cachedPersonList: List<Person>,
     private val remotePersonList: List<Person>
 ): ListUpdateCallback {
-  val duplicateCachedPersonsList = cachedPersonList.toMutableList()
+  val copyOfCachedPersonsList = cachedPersonList.toMutableList()
 
   val newlyInsertedPersons by lazy { mutableListOf<Person>() }
   val deletedPersons       by lazy { mutableListOf<Person>() }
@@ -20,7 +20,6 @@ class PersonUpdateCallback(
       updatedOldList.add(payload.first as Person)
       updatedNewList.add(payload.second as Person)
     } else  {
-      println(payload)
       throw UnsupportedOperationException("Cannot be handled")
     }
   }
@@ -28,33 +27,35 @@ class PersonUpdateCallback(
   override fun onInserted(position: Int, count: Int) {
     println("onInserted: Position: $position Count: $count")
 
-    if (cachedPersonList.isEmpty() || duplicateCachedPersonsList.isEmpty()) {
+    if (cachedPersonList.isEmpty() || copyOfCachedPersonsList.isEmpty()) {
+
       val insertedList = remotePersonList.subList(position, position + count)
       newlyInsertedPersons.addAll(insertedList)
-      duplicateCachedPersonsList.addAll(insertedList)
+      copyOfCachedPersonsList.addAll(insertedList)
+
     } else {
-      val pivotId = duplicateCachedPersonsList[0].id
+      val pivotId = copyOfCachedPersonsList[0].id
       val pivotIndex = remotePersonList.indexOfFirst { it.id == pivotId }
       val startIndex = if (position > 0) pivotIndex + position else pivotIndex - count
       val endIndex = startIndex + count
       val insertedList = remotePersonList.subList(startIndex, endIndex)
       newlyInsertedPersons.addAll(insertedList)
-      duplicateCachedPersonsList.addAll(position, insertedList)
+      copyOfCachedPersonsList.addAll(position, insertedList)
     }
   }
 
   override fun onRemoved(position: Int, count: Int) {
     println("onRemoved: Position: $position Count: $count")
 
-    deletedPersons.addAll(duplicateCachedPersonsList.subList(position, position + count))
+    deletedPersons.addAll(copyOfCachedPersonsList.subList(position, position + count))
     var lastIndex = position + count - 1
     var startIndex = position
 
     if (count == 1) {
-      duplicateCachedPersonsList.removeAt(position)
+      copyOfCachedPersonsList.removeAt(position)
     } else {
       while (lastIndex >= position && startIndex <= position + count) {
-        duplicateCachedPersonsList.removeAt(position)
+        copyOfCachedPersonsList.removeAt(position)
         lastIndex--
         startIndex++
       }
@@ -64,8 +65,8 @@ class PersonUpdateCallback(
   override fun onMoved(fromPosition: Int, toPosition: Int) {
     println("onMoved: From: $fromPosition To: $toPosition")
 
-    val person = duplicateCachedPersonsList.get(fromPosition)
-    duplicateCachedPersonsList.remove(person)
-    duplicateCachedPersonsList.add(toPosition, person)
+    val person = copyOfCachedPersonsList.get(fromPosition)
+    copyOfCachedPersonsList.remove(person)
+    copyOfCachedPersonsList.add(toPosition, person)
   }
 }
