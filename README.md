@@ -1,5 +1,8 @@
 # Diffy
+Uses Android's DiffUtil Update callbacks to determine what has changed from two lists.
 
-### Uses Android's DiffUtil to get what has changed from lists.
+Backed by Eugene W. Myers's difference algorithm to calculate the minimal number of updates
+ * to convert one list into another. Myers's algorithm does not handle items that are moved so
+ * DiffUtil runs a second pass on the result to detect items that were moved.
 
-##### Not the best. It's a work in progress. Unstable.
+Very basic. To verify conceptual proof only.
