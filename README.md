@@ -6,3 +6,9 @@ Backed by Eugene W. Myers's difference algorithm to calculate the minimal number
  * DiffUtil runs a second pass on the result to detect items that were moved.
 
 Very basic. To verify conceptual proof only.
+
+---
+
+### References
+
+<https://chromium.googlesource.com/android_tools/+/refs/heads/master/sdk/sources/android-25/android/support/v7/util/DiffUtil.java>
